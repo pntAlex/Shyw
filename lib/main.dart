@@ -20,7 +20,6 @@ class _ShywState extends State<Shyw> {
     "huifzheuifbhjuiappepldoeloolpp",
     "hjezgdhaezioixiekodorlo"
   ];
-  a = "git test"
   List<int> followList = [1, 1256, 12773, 893, 65];
   List<Widget> content = [];
 
