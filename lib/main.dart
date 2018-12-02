@@ -11,9 +11,9 @@ class Shyw extends StatefulWidget {
 }
 
 class _ShywState extends State<Shyw> {
-  List<bool> favoriteList = [];
-  List<bool> followedList = [];
-  List<bool> commentedList = [];
+  // List<bool> favoriteList = [];
+  // List<bool> followedList = [];
+  // List<bool> commentedList = [];
   List<String> labelList = [
     "dvgzefdibzjkebfuioaez",
     "dbhezgabdjzbhghxieokfio",
@@ -22,106 +22,37 @@ class _ShywState extends State<Shyw> {
   ];
   List<int> followList = [1, 1256, 12773, 893, 65];
   List<Widget> content = [];
+  var followedDict = new Map<int,bool>();
+  var favoriteDict = new Map<int,bool>();
+  var commentedDict = new Map<int,bool>();
 
   bool firstLaunch = true;
 
   void favorite(int i) {
-    setState(() => favoriteList[i] = !favoriteList[i]);
+    setState(() => favoriteDict[i] = !favoriteDict[i]);
   }
 
   void follow(int i) {
-    setState(() => followedList[i] = !followedList[i]);
+    setState(() => followedDict[i] = !followedDict[i]);
   }
 
   void comment(int i) {
-    setState(() => commentedList[i] = !commentedList[i]);
-  }
-
-  List<Widget> setContent(){
-    for (var i = 0; i < labelList.length - 1; i++) {
-      if(firstLaunch){
-        favoriteList.add(false);
-        followedList.add(false);
-        commentedList.add(false);
-        if (i == labelList.length - 1) 
-          firstLaunch = false;
-      }
-      content.add(Container(
-          padding: EdgeInsets.fromLTRB(20.0, 5.0, 15.0, .0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(Icons.home),
-                  Expanded(
-                    child: Text(
-                      "user " + i.toString(),
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Text(followedList[i] ? "Followed" : "Follow"),
-                    onPressed: () => follow(i),
-                    color: followedList[i]
-                        ? Colors.blueAccent
-                        : Colors.greenAccent,
-                  )
-                ],
-              ),
-              Container(
-                  margin: EdgeInsets.only(top: 10.0),
-                  child: Center(
-                      child: Text(
-                    (followList[i]).toString() +
-                        " people follows this programme",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ))),
-              Row(children: <Widget>[
-                IconButton(
-                  icon: favoriteList[i]
-                      ? Icon(Icons.favorite)
-                      : Icon(Icons.favorite_border),
-                  onPressed: () => favorite(i),
-                ),
-                IconButton(
-                  icon: Icon(Icons.share),
-                  onPressed: () {},
-                ),
-                Expanded(
-                    child: IconButton(
-                  icon: commentedList[i]
-                      ? Icon(Icons.chat_bubble)
-                      : Icon(Icons.chat_bubble_outline),
-                  onPressed: () => comment(i),
-                ))
-              ]),
-              Center(
-                child: Text(labelList[i]),
-              ),
-              Divider(
-                color: Colors.black,
-              ),
-            ],
-          )));
-    }
-    return content;
+    setState(() => commentedDict[i] = !commentedDict[i]);
   }
 
   @override
   Widget build(BuildContext context) {
     
+    Stopwatch stopwatch = new Stopwatch()..start();
+
     List<Widget> content = [];
-    for (var i = 0; i < labelList.length - 1; i++) {
+    for (var i = 1 ; i < labelList.length; i++) {
       if(firstLaunch){
-        favoriteList.add(false);
-        followedList.add(false);
-        commentedList.add(false);
-        if (i == labelList.length - 1) 
-          firstLaunch = false;
+        commentedDict[i] = false;
+        followedDict[i] = false;
+        favoriteDict[i] = false;
+        firstLaunch = (i != labelList.length);
       }
-      print(followedList[i]?"a":"b");
-      Color follow_button_color = followedList[i]? Colors.blueAccent : Colors.greenAccent;
-      print(follow_button_color);
       content.add(Container(
           padding: EdgeInsets.fromLTRB(20.0, 5.0, 15.0, .0),
           child: Column(
@@ -136,9 +67,9 @@ class _ShywState extends State<Shyw> {
                     ),
                   ),
                   RaisedButton(
-                    child: Text(followedList[i] ? "Followed" : "Follow"),
+                    child: Text(followedDict[i] ? "Followed" : "Follow"),
                     onPressed: () => follow(i),
-                    color: follow_button_color,
+                    color: followedDict[i]? Colors.blueAccent : Colors.greenAccent,
                   )
                 ],
               ),
@@ -152,7 +83,7 @@ class _ShywState extends State<Shyw> {
                   ))),
               Row(children: <Widget>[
                 IconButton(
-                  icon: favoriteList[i]
+                  icon: favoriteDict[i]
                       ? Icon(Icons.favorite)
                       : Icon(Icons.favorite_border),
                   onPressed: () => favorite(i),
@@ -163,7 +94,7 @@ class _ShywState extends State<Shyw> {
                 ),
                 Expanded(
                     child: IconButton(
-                  icon: commentedList[i]
+                  icon: commentedDict[i]
                       ? Icon(Icons.chat_bubble)
                       : Icon(Icons.chat_bubble_outline),
                   onPressed: () => comment(i),
@@ -178,6 +109,9 @@ class _ShywState extends State<Shyw> {
             ],
           )));
     }
+
+    
+    print('doSomething() executed in ${stopwatch.elapsedMicroseconds}');
     firstLaunch = false;
     return DefaultTabController(
     length: 4,
